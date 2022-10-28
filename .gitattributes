@@ -1,2 +1,3 @@
 * text=auto
 *.PAS text eol=crlf
+*.BAT text eol=crlf
