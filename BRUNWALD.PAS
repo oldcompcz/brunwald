@@ -44,6 +44,7 @@ procedure Window; external; {$L WINDOW.OBJ}
 procedure Gate; external; {$L GATE.OBJ}
 procedure Flag; external; {$L FLAG.OBJ}
 procedure Enemy; external; {$L ENEMY.OBJ}
+procedure Enemy2; external; {$L ENEMY2.OBJ}
 procedure Fire; external; {$L FIRE.OBJ}
 procedure CGADriver; external; {$L DRIVER.OBJ}
 
@@ -183,7 +184,10 @@ begin
     begin
       AddOccupied(P);
       HideMouse;
-      PutImage(P^.X, P^.Y, @Enemy^, XORPut);
+      if EnemiesLeft > MAX_ENEMIES div 4 then
+        PutImage(P^.X, P^.Y, @Enemy^, XORPut)
+      else
+        PutImage(P^.X, P^.Y, @Enemy2^, XORPut);
       ShowMouse;
       Dec(EnemiesLeft);
     end;
