@@ -26,18 +26,24 @@ implementation
 uses Utils;
 
 
-function _OccupiedLength: Byte;
+function _DynLength(Start: PostListPtrPtr): Byte;
 var N: Byte;
     Node: PostListPtr;
 begin
   N := 0;
-  Node := Occupied;
+  Node := Start^;
   while Node <> nil do
     begin
       Node := Node^.Next;
       Inc(N);
     end;
-  _OccupiedLength := N;
+  _DynLength := N;
+end;
+
+
+function _OccupiedLength: Byte;
+begin
+  _OccupiedLength := _DynLength(@Occupied);
 end;
 
 
@@ -88,18 +94,24 @@ begin
 end;
 
 
-function RandomOccupied: PostListPtr;
+function _PickRandom(Start: PostListPtrPtr): PostListPtr;
 var N: Byte;
     Node: PostListPtr;
 begin
-  Node := Occupied;
-  N := Random(_OccupiedLength);
+  Node := Start^;
+  N := Random(_DynLength(Start));
   while N > 0 do
     begin
       Node := Node^.Next;
       Dec(N);
     end;
-  RandomOccupied := Node;
+  _PickRandom := Node;
+end;
+
+
+function RandomOccupied: PostListPtr;
+begin
+  RandomOccupied := _PickRandom(@Occupied);
 end;
 
 end.
