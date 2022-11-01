@@ -170,8 +170,7 @@ end;
 
 
 procedure EnemyFire;
-var i: Byte;
-    P: PostPtr;
+var P: PostPtr;
     Occ: PostListPtr;
 begin
   Occ := RandomOccupied;
@@ -194,7 +193,6 @@ end;
 procedure PlayerFire;
 var i: Byte;
     P: PostPtr;
-    S: string;
 begin
   PlayerSound;
   Dec(Ammo);

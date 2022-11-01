@@ -24,7 +24,6 @@ procedure Cursor; external; {$L CURSOR.OBJ}
 
 procedure InitMouse;
 var R: Registers;
-    P: Pointer;
 begin
   R.AX := 0;    { initialize mouse driver }
   Intr($33, R);
