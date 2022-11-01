@@ -171,22 +171,17 @@ end;
 
 procedure EnemyFire;
 var P: PostPtr;
-    Occ: PostListPtr;
 begin
-  Occ := RandomOccupied;
-  if Occ <> nil then
-    begin
-      P := Occ^.Current;
-      HideMouse;
-      PutImage(P^.X - 3, P^.Y + 2, @Fire^, XORPut);
-      ShowMouse;
-      EnemySound;
-      HideMouse;
-      PutImage(P^.X - 3, P^.Y + 2, @Fire^, XORPut);
-      ShowMouse;
-      Dec(Health);
-      DisplayHealth;
-    end;
+  P := RandomOccupied^.Current;
+  HideMouse;
+  PutImage(P^.X - 3, P^.Y + 2, @Fire^, XORPut);
+  ShowMouse;
+  EnemySound;
+  HideMouse;
+  PutImage(P^.X - 3, P^.Y + 2, @Fire^, XORPut);
+  ShowMouse;
+  Dec(Health);
+  DisplayHealth;
 end;
 
 
@@ -237,7 +232,7 @@ begin
       if Mouse.Button1 and (Ammo > 0) then PlayerFire;
       if Mouse.Button2 and (Ammo = 0) then ReloadAmmo;
       if Random(1000) < (50 + Score) then AddEnemy;
-      if Random(1000) < (50 + Score) then EnemyFire;
+      if (OccupiedLength > 0) and (Random(1000) < (50 + Score)) then EnemyFire;
       if KeyPressed then Key := ReadKey;
     until (Health = 0) or (Key = #27 { Esc } );
 

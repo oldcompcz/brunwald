@@ -16,6 +16,7 @@ type Post = record
 
 var Occupied: PostListPtr;
 
+function OccupiedLength: Byte;
 procedure AddOccupied(P: PostPtr);
 procedure RemoveOccupied(P: PostPtr);
 procedure ClearOccupied;
@@ -41,9 +42,9 @@ begin
 end;
 
 
-function _OccupiedLength: Byte;
+function OccupiedLength: Byte;
 begin
-  _OccupiedLength := _DynLength(@Occupied);
+  OccupiedLength := _DynLength(@Occupied);
 end;
 
 
