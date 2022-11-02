@@ -24,13 +24,11 @@ const WIDTH = 39;
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB',
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB'
       );
-      NUM_POSTS = 21;
       MAGAZINE = 36;
 
 var Timer, Health, Ammo: Byte;
     Score: Word;
     Key: Char;
-    PostArray: array[1..NUM_POSTS] of Post;
     Mouse: MouseState;
     GraphDriver, GraphMode: Integer;
 
@@ -118,25 +116,30 @@ end;
 
 
 procedure InitPosts;
-var i, j, k: Byte;
+var i, j: Byte;
+    _P: PostPtr;
 begin
-  k := 1;
   for j := 0 to HEIGHT do
     for i := 0 to WIDTH do
       if CASTLE[j, i] = 'P' then
         begin
-          PostArray[k].X := i*8;
-          PostArray[k].Y := j*8 + 10;
-          Inc(k);
+          New(_P);
+          _P^.X := i*8;
+          _P^.Y := j*8 + 10;
+          AddPost(_P);
         end;
 end;
 
 
 procedure FreePosts;
-var i: Byte;
+var A: PostListPtr;
 begin
-  for i := 1 to NUM_POSTS do
-    PostArray[i].Free := True;
+  A := All;
+  while A <> nil do
+    begin
+      A^.Current^.Free := True;
+      A := A^.Next
+    end;
 end;
 
 
@@ -168,11 +171,9 @@ end;
 
 
 procedure AddEnemy;
-var i: Byte;
-    P: PostPtr;
+var P: PostPtr;
 begin
-  i := Succ(Random(NUM_POSTS));
-  P := @PostArray[i];
+  P := RandomPost^.Current;
   if P^.Free then
     begin
       P^.Free := False;

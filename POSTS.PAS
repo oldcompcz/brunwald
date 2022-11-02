@@ -14,12 +14,14 @@ type Post = record
      end;
      PostListPtrPtr = ^PostListPtr;
 
-var Occupied: PostListPtr;
+var All, Occupied: PostListPtr;
 
 function OccupiedLength: Byte;
+procedure AddPost(P: PostPtr);
 procedure AddOccupied(P: PostPtr);
 procedure RemoveOccupied(P: PostPtr);
 procedure ClearOccupied;
+function RandomPost: PostListPtr;
 function RandomOccupied: PostListPtr;
 
 
@@ -55,6 +57,12 @@ begin
   Node^.Current := P;
   Node^.Next := Start^;
   Start^ := Node;
+end;
+
+
+procedure AddPost(P: PostPtr);
+begin
+  _AddNodeToStart(@All, P);
 end;
 
 
@@ -110,9 +118,19 @@ begin
 end;
 
 
+function RandomPost: PostListPtr;
+begin
+  RandomPost := _PickRandom(@All);
+end;
+
+
 function RandomOccupied: PostListPtr;
 begin
   RandomOccupied := _PickRandom(@Occupied);
 end;
 
+
+begin
+  All := nil;
+  Occupied := nil;
 end.
