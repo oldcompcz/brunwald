@@ -24,7 +24,7 @@ const WIDTH = 39;
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB',
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB'
       );
-      MAGAZINE = 36;
+      MAX_AMMO = 36;
 
 var Timer, Health, Ammo: Byte;
     Score: Word;
@@ -110,7 +110,7 @@ end;
 
 procedure ReloadAmmo;
 begin
-  Ammo := MAGAZINE;
+  Ammo := MAX_AMMO;
   DisplayAmmo;
 end;
 
@@ -134,7 +134,7 @@ end;
 procedure FreePosts;
 var A: PostListPtr;
 begin
-  A := All;
+  A := AllPosts;
   while A <> nil do
     begin
       A^.Current^.Free := True;
@@ -209,7 +209,7 @@ begin
   PlayerSound;
   Dec(Ammo);
   DisplayAmmo;
-  Occ := Occupied;
+  Occ := OccupiedPosts;
   while Occ <> nil do
     begin
       P := Occ^.Current;
@@ -256,7 +256,7 @@ begin
       if Mouse.Button1 and (Ammo > 0) then PlayerFire;
       if Mouse.Button2 and (Ammo = 0) then ReloadAmmo;
       if Random(1000) < (50 + Score) then AddEnemy;
-      if (OccupiedLength > 0) and (Random(1000) < (50 + Score)) then EnemyFire;
+      if (NumOccupied > 0) and (Random(1000) < (50 + Score)) then EnemyFire;
       if KeyPressed then Key := ReadKey;
     until (Health = 0) or (Key = #27 { Esc } );
 

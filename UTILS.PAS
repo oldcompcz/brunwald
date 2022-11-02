@@ -1,6 +1,7 @@
 unit Utils;
 
 interface
+
 type MouseState = record
        X, Y: Integer;
        Button1, Button2: Boolean;
@@ -18,6 +19,7 @@ procedure EnemySound;
 
 implementation
 uses Crt, Dos;
+
 
 procedure Cursor; external; {$L CURSOR.OBJ}
 
@@ -79,18 +81,18 @@ begin
 end;
 
 
-function ToString(Number: Word): string;
+function _ToString(Number: Word): string;
 var S: string;
 begin
   Str(Number, S);
-  ToString := S;
+  _ToString := S;
 end;
 
 
 function AlignNumber(Number: Word): string;
 var S: string;
 begin
-  S := '   ' + ToString(Number);
+  S := '   ' + _ToString(Number);
   AlignNumber := Copy(S, Length(S) - 3, 4);
 end;
 

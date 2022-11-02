@@ -14,16 +14,15 @@ type Post = record
      end;
      PostListPtrPtr = ^PostListPtr;
 
-var All, Occupied: PostListPtr;
+var AllPosts, OccupiedPosts: PostListPtr;
 
-function OccupiedLength: Byte;
+function NumOccupied: Byte;
 procedure AddPost(P: PostPtr);
 procedure AddOccupied(P: PostPtr);
 procedure RemoveOccupied(P: PostPtr);
 procedure ClearOccupied;
 function RandomPost: PostListPtr;
 function RandomOccupied: PostListPtr;
-
 
 implementation
 uses Utils;
@@ -44,9 +43,9 @@ begin
 end;
 
 
-function OccupiedLength: Byte;
+function NumOccupied: Byte;
 begin
-  OccupiedLength := _DynLength(@Occupied);
+  NumOccupied := _DynLength(@OccupiedPosts);
 end;
 
 
@@ -62,21 +61,21 @@ end;
 
 procedure AddPost(P: PostPtr);
 begin
-  _AddNodeToStart(@All, P);
+  _AddNodeToStart(@AllPosts, P);
 end;
 
 
 procedure AddOccupied(P: PostPtr);
 begin
-  _AddNodeToStart(@Occupied, P);
+  _AddNodeToStart(@OccupiedPosts, P);
 end;
 
 
 procedure _RemoveFromStart;
 var _N: PostListPtr;
 begin
-  _N := Occupied;
-  Occupied := Occupied^.Next;
+  _N := OccupiedPosts;
+  OccupiedPosts := OccupiedPosts^.Next;
   Dispose(_N);
 end;
 
@@ -84,11 +83,11 @@ end;
 procedure RemoveOccupied(P: PostPtr);
 var Node, _N: PostListPtr;
 begin
-  if Occupied^.Current = P then
+  if OccupiedPosts^.Current = P then
     _RemoveFromStart
   else
     begin
-      Node := Occupied;
+      Node := OccupiedPosts;
       while Node^.Next^.Current <> P do Node := Node^.Next;
       _N := Node^.Next;
       Node^.Next := Node^.Next^.Next;
@@ -99,7 +98,7 @@ end;
 
 procedure ClearOccupied;
 begin
-  while Occupied <> nil do _RemoveFromStart;
+  while OccupiedPosts <> nil do _RemoveFromStart;
 end;
 
 
@@ -120,17 +119,17 @@ end;
 
 function RandomPost: PostListPtr;
 begin
-  RandomPost := _PickRandom(@All);
+  RandomPost := _PickRandom(@AllPosts);
 end;
 
 
 function RandomOccupied: PostListPtr;
 begin
-  RandomOccupied := _PickRandom(@Occupied);
+  RandomOccupied := _PickRandom(@OccupiedPosts);
 end;
 
 
 begin
-  All := nil;
-  Occupied := nil;
+  AllPosts := nil;
+  OccupiedPosts := nil;
 end.
