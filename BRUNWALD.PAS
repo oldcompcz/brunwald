@@ -201,25 +201,32 @@ end;
 
 
 procedure PlayerFire;
-var i: Byte;
+var X, Y: Word;
     P: PostPtr;
+    Occ: PostListPtr;
 begin
   PlayerSound;
   Dec(Ammo);
   DisplayAmmo;
-  for i := 1 to NUM_POSTS do
+  Occ := Occupied;
+  while Occ <> nil do
     begin
-      P := @PostArray[i];
-      if P^.Free or (Mouse.X < P^.X) or (Mouse.X > P^.X + 7)
-         or (Mouse.Y < P^.Y) or (Mouse.Y > P^.Y + 13) then Continue;
-      HideMouse;
-      Bar(P^.X, P^.Y, P^.X + 7, P^.Y + 13);
-      ShowMouse;
-      P^.Free := True;
-      RemoveOccupied(P);
-      Inc(Score);
-      DisplayScore;
-      Break;
+      P := Occ^.Current;
+      X := P^.X;
+      Y := P^.Y;
+      if (Mouse.X >= X) and (Mouse.X < X + 8)
+          and (Mouse.Y >= Y) and (Mouse.Y < Y + 14) then
+        begin
+          HideMouse;
+          Bar(X, Y, X + 7, Y + 13);
+          ShowMouse;
+          P^.Free := True;
+          RemoveOccupied(P);
+          Inc(Score);
+          DisplayScore;
+          Exit;
+        end;
+      Occ := Occ^.Next;
     end;
 end;
 
