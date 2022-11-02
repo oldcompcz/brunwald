@@ -117,8 +117,31 @@ begin
 end;
 
 
-procedure InitGame;
+procedure InitPosts;
 var i, j, k: Byte;
+begin
+  k := 1;
+  for j := 0 to HEIGHT do
+    for i := 0 to WIDTH do
+      if CASTLE[j, i] = 'P' then
+        begin
+          PostArray[k].X := i*8;
+          PostArray[k].Y := j*8 + 10;
+          Inc(k);
+        end;
+end;
+
+
+procedure FreePosts;
+var i: Byte;
+begin
+  for i := 1 to NUM_POSTS do
+    PostArray[i].Free := True;
+end;
+
+
+procedure InitGame;
+var i, j: Byte;
 begin
   Bar(0, 0, 319, 199);
   Health := 100;
@@ -130,25 +153,17 @@ begin
   DisplayScore;
   OutTextXY(30*8, 192, 'Score:');
 
-  k := 1;
   for j := 0 to HEIGHT do
     for i := 0 to WIDTH do
-      begin
-        case CASTLE[j, i] of
-          'B': PutImage(i*8, j*8 + 16, @Brick^, XORPut);
-          'W': PutImage(i*8, j*8 + 16, @Window^, XORPut);
-          'P': begin
-                 PostArray[k].X := i*8;
-                 PostArray[k].Y := j*8 + 10;
-                 PostArray[k].Free := True;
-                 Inc(k);
-               end;
-        end;
+      case CASTLE[j, i] of
+        'B': PutImage(i*8, j*8 + 16, @Brick^, XORPut);
+        'W': PutImage(i*8, j*8 + 16, @Window^, XORPut);
       end;
 
   PutImage(120, 114, @Gate^, NormalPut);
   PutImage(283, 10, @Flag^, XORPut);
   ClearOccupied;
+  FreePosts;
 end;
 
 
@@ -217,6 +232,7 @@ begin
   InitMouse;
   Randomize;
   SetFillStyle(SolidFill, 0);
+  InitPosts;
 
   repeat
     TitleScreen;
