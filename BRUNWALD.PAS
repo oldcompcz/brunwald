@@ -25,8 +25,9 @@ const WIDTH = 39;
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB'
       );
       MAX_AMMO = 36;
+      MAX_ENEMIES = 100;
 
-var Timer, Health, Ammo: Byte;
+var Timer, Health, Ammo, EnemiesLeft: Byte;
     Score: Word;
     Key: Char;
     Mouse: MouseState;
@@ -96,11 +97,19 @@ procedure GameOverScreen;
 begin
   Bar(0, 0, 319, 199);
   SetColor(2);
-  if Health > 0 then
-    CenteredText('Mission aborted', 56)
+  if Score = MAX_ENEMIES then
+    begin
+      CenteredText('Mission completed', 56);
+      CenteredText('Congratulations', 76);
+    end
   else
-    CenteredText('Killed in action', 56);
-  CenteredText('Game Over', 76);
+    begin
+      if Health = 0 then
+        CenteredText('Killed in action', 56)
+      else
+        CenteredText('Mission aborted', 56);
+      CenteredText('Game Over', 76);
+    end;
   SetColor(1);
   CenteredText('Score: ' + AlignNumber(Score), 108);
   SetColor(3);
@@ -144,6 +153,7 @@ begin
   Score := 0;
   DisplayScore;
   OutTextXY(30*8, 192, 'Score:');
+  EnemiesLeft := MAX_ENEMIES;
 
   for j := 0 to HEIGHT do
     for i := 0 to WIDTH do
@@ -167,6 +177,7 @@ begin
       HideMouse;
       PutImage(P^.X, P^.Y, @Enemy^, XORPut);
       ShowMouse;
+      Dec(EnemiesLeft);
     end;
 end;
 
@@ -240,10 +251,10 @@ begin
       Mouse := GetMouseState^;
       if Mouse.Button1 and (Ammo > 0) then PlayerFire;
       if Mouse.Button2 and (Ammo = 0) then ReloadAmmo;
-      if Random(1000) < (50 + Score) then AddEnemy;
+      if (EnemiesLeft > 0) and (Random(1000) < (50 + Score)) then AddEnemy;
       if (NumOccupied > 0) and (Random(1000) < (50 + Score)) then EnemyFire;
       if KeyPressed then Key := ReadKey;
-    until (Health = 0) or (Key = #27 { Esc } );
+    until (Score = MAX_ENEMIES) or (Health = 0) or (Key = #27 { Esc } );
 
     HideMouse;
     ClearOccupied;
