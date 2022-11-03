@@ -67,6 +67,7 @@ end;
 
 procedure AddOccupied(P: PostPtr);
 begin
+  P^.Free := False;
   _AddNodeToStart(@OccupiedPosts, P);
 end;
 
@@ -74,6 +75,7 @@ end;
 procedure _RemoveFromStart;
 var _N: PostListPtr;
 begin
+  OccupiedPosts^.Current^.Free := True;
   _N := OccupiedPosts;
   OccupiedPosts := OccupiedPosts^.Next;
   Dispose(_N);
@@ -87,6 +89,7 @@ begin
     _RemoveFromStart
   else
     begin
+      P^.Free := True;
       Node := OccupiedPosts;
       while Node^.Next^.Current <> P do Node := Node^.Next;
       _N := Node^.Next;

@@ -126,20 +126,9 @@ begin
           New(_P);
           _P^.X := i*8;
           _P^.Y := j*8 + 10;
+          _P^.Free := True;
           AddPost(_P);
         end;
-end;
-
-
-procedure FreePosts;
-var A: PostListPtr;
-begin
-  A := AllPosts;
-  while A <> nil do
-    begin
-      A^.Current^.Free := True;
-      A := A^.Next
-    end;
 end;
 
 
@@ -165,8 +154,6 @@ begin
 
   PutImage(120, 114, @Gate^, NormalPut);
   PutImage(283, 10, @Flag^, XORPut);
-  ClearOccupied;
-  FreePosts;
 end;
 
 
@@ -176,7 +163,6 @@ begin
   P := RandomPost^.Current;
   if P^.Free then
     begin
-      P^.Free := False;
       AddOccupied(P);
       HideMouse;
       PutImage(P^.X, P^.Y, @Enemy^, XORPut);
@@ -221,7 +207,6 @@ begin
           HideMouse;
           Bar(X, Y, X + 7, Y + 13);
           ShowMouse;
-          P^.Free := True;
           RemoveOccupied(P);
           Inc(Score);
           DisplayScore;
@@ -261,6 +246,7 @@ begin
     until (Health = 0) or (Key = #27 { Esc } );
 
     HideMouse;
+    ClearOccupied;
     GameOverScreen;
     while KeyPressed do ReadKey;
     repeat until KeyPressed;
