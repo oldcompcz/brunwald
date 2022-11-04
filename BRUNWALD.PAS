@@ -24,6 +24,7 @@ const WIDTH = 39;
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB',
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB'
       );
+      MAX_HEALTH = 100;
       MAX_AMMO = 36;
       MAX_ENEMIES = 100;
 
@@ -152,7 +153,7 @@ procedure InitGame;
 var i, j: Byte;
 begin
   Bar(0, 0, 319, 199);
-  Health := 100;
+  Health := MAX_HEALTH;
   DisplayHealth;
   OutTextXY(0, 192, 'Health:     %');
   ReloadAmmo;
