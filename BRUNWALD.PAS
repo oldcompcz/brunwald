@@ -27,9 +27,12 @@ const WIDTH = 39;
       MAX_AMMO = 36;
       MAX_ENEMIES = 100;
 
+type STATUS = (WIN, KIA, ABORT);
+
 var Timer, Health, Ammo, EnemiesLeft: Byte;
     Score: Word;
     Key: Char;
+    GameStatus: STATUS;
     Mouse: MouseState;
     GraphDriver, GraphMode: Integer;
 
@@ -93,23 +96,27 @@ begin
 end;
 
 
-procedure GameOverScreen;
+procedure GameOverScreen(GameStatus: STATUS);
 begin
   Bar(0, 0, 319, 199);
   SetColor(2);
-  if Score = MAX_ENEMIES then
-    begin
-      CenteredText('Mission completed', 56);
-      CenteredText('Congratulations', 76);
-    end
-  else
-    begin
-      if Health = 0 then
-        CenteredText('Killed in action', 56)
-      else
+  case GameStatus of
+    WIN:
+      begin
+        CenteredText('Mission completed', 56);
+        CenteredText('Congratulations', 76);
+      end;
+    KIA:
+      begin
+        CenteredText('Killed in action', 56);
+        CenteredText('Game Over', 76);
+      end;
+    ABORT:
+      begin
         CenteredText('Mission aborted', 56);
-      CenteredText('Game Over', 76);
-    end;
+        CenteredText('Game Over', 76);
+      end;
+  end;
   SetColor(1);
   CenteredText('Score: ' + AlignNumber(Score), 108);
   SetColor(3);
@@ -249,16 +256,40 @@ begin
     repeat
       Timer := TimeSync(Timer);
       Mouse := GetMouseState^;
-      if Mouse.Button1 and (Ammo > 0) then PlayerFire;
+      if Mouse.Button1 and (Ammo > 0) then
+        begin
+          PlayerFire;
+          if Score = MAX_ENEMIES then
+            begin
+              GameStatus := WIN;
+              Break;
+            end;
+        end;
       if Mouse.Button2 and (Ammo = 0) then ReloadAmmo;
       if (EnemiesLeft > 0) and (Random(1000) < (50 + Score)) then AddEnemy;
-      if (NumOccupied > 0) and (Random(1000) < (50 + Score)) then EnemyFire;
-      if KeyPressed then Key := ReadKey;
-    until (Score = MAX_ENEMIES) or (Health = 0) or (Key = #27 { Esc } );
+      if (NumOccupied > 0) and (Random(1000) < (50 + Score)) then
+        begin
+          EnemyFire;
+          if Health = 0 then
+            begin
+              GameStatus := KIA;
+              Break;
+            end;
+        end;
+      if KeyPressed then
+        begin
+          Key := ReadKey;
+          if Key = #27 then
+            begin
+              GameStatus := ABORT;
+              Break;
+            end;
+        end;
+    until False;
 
     HideMouse;
     ClearOccupied;
-    GameOverScreen;
+    GameOverScreen(GameStatus);
     while KeyPressed do ReadKey;
     repeat until KeyPressed;
   until False;
