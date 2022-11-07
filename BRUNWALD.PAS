@@ -14,7 +14,7 @@ const WIDTH = 39;
         '  BBBBB                         BBBPBBB ',
         '  BBWBB                         BBBBBBB ',
         '  BB BB                         BBBBBBB ',
-        '  BBPBB BPBPBPBPBPBPBPBPBPBPBPB BBBWBBB ',
+        ' PBBPBBPBPBPBPBPBPBPBPBPBPBPBPBPBBBWBBB ',
         'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB BBBB',
         'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBPBBBB',
         'BBBBBBBBBBBWBBB    BBBBWBBBBBBBBBBBBBBBB',
@@ -24,7 +24,7 @@ const WIDTH = 39;
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB',
         'BBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBBB'
       );
-      MAX_HEALTH = 100;
+      MAX_HEALTH = 125;
       MAX_AMMO = 36;
       MAX_ENEMIES = 100;
 
@@ -54,7 +54,7 @@ begin
   SetColor(1);
   HideMouse;
   Bar(7*8, 192, 11*8-1, 199);
-  OutTextXY(7*8, 192, AlignNumber(Health));
+  OutTextXY(7*8, 192, AlignNumber(Health * 100 div MAX_HEALTH));
   ShowMouse;
 end;
 
@@ -224,8 +224,8 @@ begin
       P := Occ^.Current;
       X := P^.X;
       Y := P^.Y;
-      if (Mouse.X >= X) and (Mouse.X < X + 8)
-          and (Mouse.Y >= Y) and (Mouse.Y < Y + 14) then
+      if (Mouse.X > X) and (Mouse.X < X + 7)
+          and (Mouse.Y > Y) and (Mouse.Y < Y + 14) then
         begin
           HideMouse;
           Bar(X, Y, X + 7, Y + 13);
@@ -271,8 +271,8 @@ begin
             end;
         end;
       if Mouse.Button2 and (Ammo = 0) then ReloadAmmo;
-      if (EnemiesLeft > 0) and (Random(1000) < (50 + Score)) then AddEnemy;
-      if (NumOccupied > 0) and (Random(1000) < (50 + Score)) then
+      if (EnemiesLeft > 0) and (Random(1000) < (65 + Score)) then AddEnemy;
+      if (NumOccupied > 0) and (Random(1000) < (65 + Score)) then
         begin
           EnemyFire;
           if Health = 0 then
