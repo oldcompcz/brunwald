@@ -184,7 +184,7 @@ begin
     begin
       AddOccupied(P);
       HideMouse;
-      if EnemiesLeft > MAX_ENEMIES div 4 then
+      if Random(100) < 80 then
         PutImage(P^.X, P^.Y, @Enemy^, XORPut)
       else
         PutImage(P^.X, P^.Y, @Enemy2^, XORPut);
